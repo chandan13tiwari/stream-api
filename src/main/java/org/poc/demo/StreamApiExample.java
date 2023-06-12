@@ -1,9 +1,9 @@
 package org.poc.demo;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class StreamApiExample {
@@ -91,6 +91,63 @@ public class StreamApiExample {
                 .map(i -> i*2)
                 .findFirst();
         System.out.println("Find First Element: " + findFirst.get());
+
+
+        // demo - count the occurrence of i with chars()
+        System.out.println("~~~~ Demo - Count the occurrence of i with chars() ~~~~");
+        String name = "Mississippi";
+        IntStream stream = name.chars();
+        int occurrenceCount = (int) stream.filter(ch -> ch == 'i').count();
+        System.out.println(occurrenceCount);
+
+        // demo - count the occurrence of i with codePoints()
+        System.out.println("~~~~ Demo - Count the occurrence of i with codePoints() ~~~~");
+        String name2 = "Mississippi";
+        IntStream stream2 = name2.codePoints();
+        int occurrenceCount2 = (int) stream2.filter(ch -> ch == 'i').count();
+        System.out.println(occurrenceCount2);
+
+        /*
+        The implementation of both the methods are exact same. BUT
+        Difference between chars() and codePoint() is just the range.
+        codePoints range is from 0 - 10FFFF16
+        char range is from 0 - FFFF
+         */
+
+        // demo - count the occurrence of each character -
+        System.out.println("~~~~ Demo - Count the occurrence of each character ~~~~");
+        String str = "Mississippi";
+        Map<Character, Long> map = str.chars()
+                .mapToObj(ch -> (char) ch)
+                .collect(Collectors.groupingBy(ch -> ch, Collectors.counting()));
+        map.forEach((key, value) -> System.out.println(key + " " + value));
+
+        // demo - count all the duplicate characters in a string
+        System.out.println("~~~~ Demo - Count all the duplicate characters in a string ~~~~");
+        String str2 = "java is java is again java";
+        Set<String> setData = new HashSet<>();
+        int occCount = (int) Arrays.stream(str2.split(" "))
+                .filter(i -> !setData.add(i))
+                .count();
+        System.out.println(occCount);
+
+        // demo - merge two string array using flatMap
+        System.out.println("~~~~ Demo - Merge two string array using FlatMap ~~~~");
+        String[] arr1 = {"1", "2", "3"};
+        String[] arr2 = {"4", "5", "6"};
+        String[] flatMap = Stream.of(arr1, arr2)
+                .flatMap(Stream::of)
+                .toArray(String[]::new);
+        System.out.println(Arrays.toString(flatMap));
+
+        // demo - remove duplicate words from String
+        System.out.println("~~~~ Demo - Remove duplicate words from String ~~~~");
+        String str3 = "JAVA is JAVA is again JAVA";
+        String newString = Arrays.asList(str3.split(" "))
+                .stream()
+                .distinct()
+                .collect(Collectors.joining(" "));
+        System.out.println(newString);
 
     }
 }
