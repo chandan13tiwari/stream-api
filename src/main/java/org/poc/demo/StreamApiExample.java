@@ -143,8 +143,7 @@ public class StreamApiExample {
         // demo - remove duplicate words from String
         System.out.println("~~~~ Demo - Remove duplicate words from String ~~~~");
         String str3 = "JAVA is JAVA is again JAVA";
-        String newString = Arrays.asList(str3.split(" "))
-                .stream()
+        String newString = Arrays.stream(str3.split(" "))
                 .distinct()
                 .collect(Collectors.joining(" "));
         System.out.println(newString);
