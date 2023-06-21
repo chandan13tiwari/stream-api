@@ -1,6 +1,7 @@
 package org.poc.demo;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -122,6 +123,13 @@ public class StreamApiExample {
                 .collect(Collectors.groupingBy(ch -> ch, Collectors.counting()));
         map.forEach((key, value) -> System.out.println(key + " " + value));
 
+        // demo - count the occurrence of each character ALTERNATIVE-
+        System.out.println("~~~~ Demo - Count the occurrence of each character ALTERNATIVE ~~~~");
+        String str5 = "AAAABBBCDD";
+        Map<String, Integer> map2 = Arrays.stream(str5.split(""))
+                        .collect(Collectors.toMap(Function.identity(), c -> 1, Math::addExact)); // we can use Integer::sum here
+        map2.forEach((key, value) -> System.out.println(key + " " + value));
+
         // demo - count all the duplicate characters in a string
         System.out.println("~~~~ Demo - Count all the duplicate characters in a string ~~~~");
         String str2 = "java is java is again java";
@@ -147,6 +155,25 @@ public class StreamApiExample {
                 .distinct()
                 .collect(Collectors.joining(" "));
         System.out.println(newString);
+
+
+        // demo - nth highest salary
+        System.out.println("~~~~ Demo - Nth Highest Salary ~~~~");
+        Map<String, Integer> employeeMap = new HashMap<>();
+        employeeMap.put("Chandan", 1400);
+        employeeMap.put("Satish", 1200);
+        employeeMap.put("Golu", 1400);
+        employeeMap.put("Manisha", 1800);
+        employeeMap.put("Kamal", 1100);
+
+        Map.Entry<Integer, List<String>> secondHighestSalary = employeeMap.entrySet().stream()
+                .collect(Collectors.groupingBy(Map.Entry::getValue, Collectors.mapping(Map.Entry::getKey, Collectors.toList())))
+                .entrySet().stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByKey()))
+                .toList()
+                .get(1);
+
+        System.out.println(secondHighestSalary);
 
     }
 }
