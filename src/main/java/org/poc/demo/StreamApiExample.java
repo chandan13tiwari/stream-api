@@ -175,5 +175,47 @@ public class StreamApiExample {
 
         System.out.println(secondHighestSalary);
 
+
+        // demo - Word count - Count the occurrence of word more than 1 time
+        System.out.println("~~~~ Demo - Word Count ~~~~");
+        String str6 = "What is your name? My name is Chandan. Hi Chandan!";
+
+        System.out.println(Arrays.toString(str6.split("[\\s@&.?!$+-]+")));
+
+        System.out.println(
+                Arrays.stream(str6.split("[\\s@&.?!$+-]+"))
+                        .collect(Collectors.groupingBy(i -> i, Collectors.counting()))
+                        .entrySet().stream()
+                        .filter(i -> i.getValue() > 1)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+        );
+
+
+        // demo - Reverse String
+        System.out.println("~~~~ Demo - Reverse String ~~~~");
+        String str7 = "JAVA Developer";
+        StringBuilder output = new StringBuilder();
+        String[] strArray = str7.split(" ");
+        for(int i=strArray.length-1; i>=0; i--) {
+            output.append(reverseStringUsingStreamOf(strArray[i]));
+            output.append(" ");
+        }
+
+        System.out.println(output.toString().trim());
+
+        System.out.println(new StringBuilder(str7).reverse());
+
+    }
+
+    public static String reverseStringUsingStreamOf(String str) {
+        return Stream.of(str)
+                .map(string -> new StringBuilder(string).reverse())
+                .collect(Collectors.joining());
+    }
+
+    public static String reverseStringUsingStreamReduce(String str) {
+        return str.chars()
+                .mapToObj(c -> (char) c)
+                .reduce("", (a, b) -> b + a, (a2, b2) -> b2 + a2);
     }
 }
